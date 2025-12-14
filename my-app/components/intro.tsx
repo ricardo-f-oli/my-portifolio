@@ -9,7 +9,7 @@ export default function Intro() {
           Hey, I&#39;m Ricardo.
         </h1>
         <p className='mt-3 font-light text-muted-foreground'>
-          I&#39;m a Software Engineer with 6+ years of professional experience specializing in building and maintaining 
+          I&#39;m a Software Engineer with +6 years of professional experience specializing in building and maintaining 
 high-quality, secure RESTful APIs and backend systems for global enterprises in finance, 
 e-commerce, and healthcare. 
         </p>
