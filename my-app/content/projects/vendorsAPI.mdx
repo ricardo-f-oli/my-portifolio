@@ -1,0 +1,389 @@
+---
+    title: VendorsAPI using Java, SpringBoot, Docker, OpenAPI, JUnit 5. 
+    summary: This is a RESTful API for managing sellers, offering full CRUD (Create, Read, Update, Delete) operations. The API is designed to be easy to integrate with, providing endpoints to handle seller data efficiently.
+    image: /images/projects/vendorsAPI.png
+    author: 'Ricardo Oliveira'
+    publishedAt: '2024-08-08'
+---
+
+## 🚀 Overview
+
+The Vendors API provides a complete solution for managing vendor data within enterprise systems. Built with modern Java technologies and following REST best practices, this API offers seamless integration capabilities with comprehensive error handling, validation, and monitoring.
+
+### Key Features
+
+* **Full CRUD Operations**: Create, Read, Update, and Delete vendor records
+* **Advanced Filtering**: Search vendors by contract type and other criteria
+* **Comprehensive Validation**: Built-in data validation and error handling
+* **Monitoring Ready**: Integrated with Prometheus and Grafana for observability
+* **API Documentation**: Complete OpenAPI 3.0 specification with interactive documentation
+* **Containerized**: Docker support for easy deployment and scaling
+
+## 🛠️ Technology Stack
+
+```yaml
+Backend: Java 21, Spring Boot 3
+Build Tool: Maven
+Database: PostgreSQL
+Containerization: Docker & Docker Compose
+Monitoring: Prometheus & Grafana
+API Documentation: OpenAPI 3.0
+Testing: JUnit 5
+```
+
+## 📋 Prerequisites
+
+* Java 21 or higher
+* Maven 3.8+
+* Docker and Docker Compose
+* PostgreSQL (optional – included in Docker setup)
+
+## 🚦 Quick Start Guide
+
+### 1. Clone and Prepare the Repository
+
+```bash
+# Clone the repository
+git clone https://github.com/your-username/vendors-api.git
+cd vendors-api
+
+# Install dependencies and verify build
+mvn clean install
+```
+
+### 2. Start Services with Docker
+
+```bash
+# Start all required services
+docker-compose up -d
+```
+
+This command initializes:
+
+* PostgreSQL database
+* External API dependencies
+* Prometheus for metrics collection
+* Grafana for visualization dashboard
+
+### 3. Run the Application
+
+```bash
+# Run in development mode
+mvn spring-boot:run
+
+# Or run with debugging enabled
+mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005"
+```
+
+The API will be available at:
+
+```
+http://localhost:8080
+```
+
+## 🔌 API Endpoints
+
+**Base URL:**
+
+```
+http://localhost:8080/v1
+```
+
+### Create a New Vendor
+
+**POST** `/vendor`
+
+```json
+{
+  "name": "John",
+  "birthday": "01-01-2017",
+  "document": "CPF ou CNPJ",
+  "email": "rese@email.com",
+  "contractType": "outsourcing",
+  "branch": "branch name"
+}
+```
+
+**Response**
+
+```json
+{
+  "id": 10,
+  "registration": "98767367-OUT",
+  "name": "John",
+  "birthday": "01-01-2017",
+  "document": "CPF ou CNPJ",
+  "email": "rese@email.com",
+  "contractType": "outsourcing",
+  "branch": {
+    "id": 1,
+    "name": "FilialNorte",
+    "document": "12345678000195",
+    "city": "São Paulo",
+    "UF": "SP",
+    "type": "Matriz",
+    "active": true,
+    "registerDate": "01-08-2024",
+    "lastUpdateDate": "10-08-2024"
+  }
+}
+```
+
+### Retrieve Vendor by Registration
+
+**GET** `/vendor/{registration}`
+
+**Path Parameter**
+
+* `registration`: Vendor registration number (string)
+
+**Response**
+
+```json
+{
+  "id": 10,
+  "registration": "98767367-OUT",
+  "name": "John",
+  "birthday": "01-01-2017",
+  "document": "CPF ou CNPJ",
+  "email": "rese@email.com",
+  "contractType": "outsourcing",
+  "branch": {
+    "id": 1,
+    "name": "FilialNorte",
+    "document": "12345678000195",
+    "city": "São Paulo",
+    "UF": "SP",
+    "type": "Matriz",
+    "active": true,
+    "registerDate": "01-08-2024",
+    "lastUpdateDate": "10-08-2024"
+  }
+}
+```
+
+### Update Existing Vendor
+
+**PUT** `/{id}`
+
+**Path Parameter**
+
+* `id`: Vendor ID to update (string)
+
+**Request Body**
+
+```json
+{
+  "name": "John Updated",
+  "birthday": "01-01-2017",
+  "document": "CPF ou CNPJ",
+  "email": "updated@email.com",
+  "contractType": "clt",
+  "branch": "updated branch name"
+}
+```
+
+### Find Vendors by Contract Type
+
+**GET** `/vendor/findByContractType`
+
+**Query Parameter**
+
+* `contractType`: Array of contract types to filter (array of strings)
+
+**Possible values:** `outsourcing`, `clt`, `pj`
+
+**Response**
+
+```json
+[
+  {
+    "id": 10,
+    "registration": "98767367-OUT",
+    "name": "John",
+    "birthday": "01-01-2017",
+    "document": "CPF ou CNPJ",
+    "email": "rese@email.com",
+    "contractType": "outsourcing",
+    "branch": {
+      "id": 1,
+      "name": "FilialNorte",
+      "document": "12345678000195",
+      "city": "São Paulo",
+      "UF": "SP",
+      "type": "Matriz",
+      "active": true,
+      "registerDate": "01-08-2024",
+      "lastUpdateDate": "10-08-2024"
+    }
+  }
+]
+```
+
+### Delete Vendor
+
+**DELETE** `/vendor/{registration}`
+
+**Path Parameter**
+
+* `registration`: Vendor registration number to delete (string)
+
+## 📊 Data Models
+
+### VendorRequest
+
+```json
+{
+  "name": "string",
+  "birthday": "string (format: dd-MM-yyyy)",
+  "document": "string (CPF or CNPJ)",
+  "email": "string (email format)",
+  "contractType": "string (enum: outsourcing, clt, pj)",
+  "branch": "string"
+}
+```
+
+### VendorResponse
+
+```json
+{
+  "id": "integer",
+  "registration": "string (auto-generated)",
+  "name": "string",
+  "birthday": "string",
+  "document": "string",
+  "email": "string",
+  "contractType": "string",
+  "branch": {
+    "id": "integer",
+    "name": "string",
+    "document": "string",
+    "city": "string",
+    "UF": "string",
+    "type": "string",
+    "active": "boolean",
+    "registerDate": "string",
+    "lastUpdateDate": "string"
+  }
+}
+```
+
+### Branch
+
+```json
+{
+  "id": "integer",
+  "name": "string",
+  "document": "string",
+  "city": "string",
+  "UF": "string (2 characters)",
+  "type": "string",
+  "active": "boolean",
+  "registerDate": "string",
+  "lastUpdateDate": "string"
+}
+```
+
+## 🚨 Error Handling
+
+The API returns appropriate HTTP status codes:
+
+* `200` – Success
+* `400` – Invalid input
+* `404` – Resource not found
+* `422` – Validation exception
+
+## 📈 Monitoring and Metrics
+
+The application includes built-in monitoring:
+
+* **Prometheus**: Metrics available at `/actuator/prometheus`
+* **Grafana**: Visualization dashboard for application health
+* **Health Checks**: `/actuator/health`
+
+## 🔒 Security
+
+The API supports multiple authentication methods:
+
+* **OAuth2 (petstore_auth)** – Production OAuth flows
+* **API Key (api_key)** – Header-based authentication
+
+## 📚 API Documentation
+
+* OpenAPI specification: `src/main/resources/vendors.yml`
+
+Interactive documentation:
+
+* Swagger UI: `http://localhost:8080/swagger-ui.html`
+* OpenAPI JSON: `http://localhost:8080/v3/api-docs`
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+mvn test
+
+# Run tests with coverage report
+mvn clean verify
+```
+
+## 🐳 Docker Deployment
+
+### Build Docker Image
+
+```bash
+docker build -t vendors-api:latest .
+```
+
+### Run with Docker Compose
+
+```bash
+# Full stack with database and monitoring
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+```
+
+## 🏗️ Project Structure
+
+```text
+vendors-api/
+├── src/main/java/
+│   └── com/vendors/
+│       ├── controller/     # REST controllers
+│       ├── service/        # Business logic
+│       ├── repository/     # Data access layer
+│       ├── model/          # Domain models
+│       └── config/         # Configuration classes
+├── src/main/resources/
+│   ├── vendors.yml         # OpenAPI specification
+│   └── application.yml     # Application configuration
+├── docker-compose.yml      # Docker services
+├── Dockerfile              # Application container
+└── pom.xml                 # Maven dependencies
+```
+
+## 📝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## 📄 License
+
+Apache 2.0 – See `LICENSE` file for details
+
+## 👤 Contact
+
+**Ricardo Oliveira**
+📧 Email: [ricardo.fer.oliveira964@gmail.com](mailto:ricardo.fer.oliveira964@gmail.com)
+
+---
+
+> **Note**: This API is designed for learning and demonstration purposes. Adjust security configurations and database connections for production use.

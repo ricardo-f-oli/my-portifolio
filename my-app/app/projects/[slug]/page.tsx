@@ -28,7 +28,7 @@ export default async function Projects({params}: {params: {slug: string}}){
         <section className='pb-24 pt-32'>
             <div className='container max-w-3x1'>
                 <Link
-                    href='/posts'
+                    href='/projects'
                     className='mb-8 inline-flex items-center gap-2 text-sm font-light'
                 >
                     <ArrowLeftIcon className='h-5 w-5' />
@@ -53,7 +53,7 @@ export default async function Projects({params}: {params: {slug: string}}){
                     {author}/ {formatDate(publishedAt ?? '')}
                 </p>
 
-                <main className='prose mt-16 dark:prose-invert'>
+                <main className='prose prose-invert max-w-3x1'>
                     <MDXContent source={content} />
                 </main>
             </header>
